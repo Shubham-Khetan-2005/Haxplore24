@@ -1,12 +1,7 @@
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>TempTick</title>
-    <link
+{% extends "base.html" %}
+{% block title %}Login Page{% endblock %}
+{%block style%}
+<link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:400,700"
     />
@@ -56,27 +51,10 @@
       .fa-eye:hover {
         cursor: pointer;
       }
-    </style>
-  </head>
-
-  <body onload="loader_true()" style="background-color: white; color: black">
-    <!-- Image and text -->
-    <nav class="navbar navbar-light bg-light pl-5 pt-3">
-      <a class="navbar-brand" href="./" style="font-size: 2rem">
-        <img
-          src="static/image/logo.jpg"
-          width="30"
-          height="30"
-          class="d-inline-block align-top"
-          alt=""
-          style="width: 45px; height: 45px; border-radius: 25%"
-        />
-        Haxplore
-      </a>
-    </nav>
-    <div id="unknown"></div>
+    </style>{%endblock%}
+  {%block body%}
     <div
-      class="mt-2 ml-1 mr-1 d-flex"
+      class="mt-5 ml-1 mr-1 d-flex"
       style="
         box-sizing: border-box;
         justify-content: space-evenly;
@@ -102,7 +80,7 @@
                 class="form-control"
                 name="contact"
                 id="phone "
-                value="<%=values.contact%>"
+                value="{{values.contact}}"
                 placeholder="Phone Number"
                 required="required"
                 maxlength="10"
@@ -151,7 +129,8 @@
       
     </div>
     <div id="preloader"></div>
-  </body>
+    {%endblock%}
+{%block script%}
   <script
     src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -222,4 +201,5 @@
       this.classList.toggle("fa-eye-slash");
     });
   </script>
+{%endblock%}
 </html>

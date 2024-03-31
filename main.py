@@ -98,7 +98,7 @@ def not_found(e):
 
 @app.route("/", methods = ['GET'])
 def index():
-    return render_template("base.html")
+    return render_template("index.html")
 
 @app.route("/login", methods = ['GET', 'POST'])
 def login():
