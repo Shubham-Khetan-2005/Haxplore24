@@ -2,7 +2,14 @@ from flask import Flask, render_template, request, redirect , url_for, session, 
 from flask_login import LoginManager , login_required , login_user , logout_user  , current_user
 from flask_sqlalchemy import SQLAlchemy
 import login_system as ls
+from ecdsa import SigningKey
+from argon2 import PasswordHasher
+from Blockchain.blockChain import BlockChain
+from Blockchain.transaction import Transaction
 
+ph=PasswordHasher()
+mychain=BlockChain()
+MAX_TRANSACTIONS=1 
 app =Flask(__name__)
 
 app.secret_key = "super-secret-key"
@@ -11,7 +18,36 @@ app.config['SECRET_KEY'] = '12345'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+publicKeys=set()
+# Fetch all publicKey from dataset and store in publicKey
 
+
+def to_string(key,isPublic):
+    if isPublic:
+        return key.to_pem()[len(b"-----BEGIN PUBLIC KEY-----\n"):-len(b"\n-----END PUBLIC KEY-----\n")].decode()
+    return key.to_pem()[len(b"-----BEGIN EC PRIVATE KEY-----\n"):-len(b"\n-----END EC PRIVATE KEY-----\n")].decode()
+
+def to_pem(key_str,isPublic):
+    if isPublic:
+        return b"-----BEGIN PUBLIC KEY-----\n"+key_str.encode()+b"\n-----END PUBLIC KEY-----\n"
+    return b"-----BEGIN EC PRIVATE KEY-----\n"+key_str.encode()+b"\n-----END EC PRIVATE KEY-----\n"
+
+def remove_escapeChar(word):
+    res=""
+    for i in word:
+        if i not in ['\n','\t','\r','\b']:
+            res+=i
+
+    return res
+def generateKeypair():
+    print("Generating Key")
+    n=len(publicKeys)
+    privateKey=publicKey=None
+    while n==len(publicKeys):
+        privateKey=SigningKey.generate()
+        publicKey=privateKey.verifying_key
+        publicKeys.add(to_string(publicKey,True))
+    return privateKey,publicKey
 
 @login_manager.user_loader
 def load_user(details):
