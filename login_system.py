@@ -31,47 +31,6 @@ class User():
     def __str__(self):
         return f'{self.name} , {self.email} , {self.role}'
 
-def find_account(email,dbase1 , dbase2):
-
-    try:
-        
-        st_account = dbase1.query.filter_by(user_email = email).first()
-        if st_account == None:
-            t_account = dbase2.query.filter_by(user_email = email).first()
-
-            if t_account == None:
-                fe.login_err()            
-                return None , None
-
-            return (t_account  , "Teacher")
-        return (st_account , "Student")
-
-    except Exception:
-
-        # fe.server_contact_error()
-        return "Problem in contacting" , None
-
-
-def get_user_details(dbase,dbase2,role,sno):
-
-    try:
-        if role == "Teacher":
-            user_account = dbase2.query.filter_by(sno = sno).first()
-            if user_account == None :
-                return None , None
-            return user_account.user_name , user_account.user_email
-        elif role == "Student":
-            user_account = dbase.query.filter_by(sno = sno).first()
-            if user_account == None :
-                return None , None
-            return user_account.user_name , user_account.user_email
-        return None , None
-        
-    except Exception:
-
-        # fe.server_contact_error()        
-        return None , None
-
 
 def get_values(request , *args):
 

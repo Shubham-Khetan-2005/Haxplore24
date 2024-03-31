@@ -6,6 +6,8 @@ from ecdsa import SigningKey
 from argon2 import PasswordHasher
 from Blockchain.blockChain import BlockChain
 from Blockchain.transaction import Transaction
+import signup as si
+import re
 
 ph=PasswordHasher()
 mychain=BlockChain()
@@ -118,6 +120,34 @@ def login():
 def signup():
     if current_user.is_authenticated:
         return redirect(url_for("index"))
+    if request.methods == 'POST' :
+
+        name,contact,password = si.get_values(request , 'name' , 'contact' ,'password')
+
+        if None in (name,contact,password) or "" in (name,contact,password) :
+            # fe.some_went_wrong()
+            return redirect("/signup")
+        
+        if not (bool(re.match("(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" , password))):
+            # fe.some_went_wrong()
+            return redirect("/signup")
+        
+        account_presence = si.check_in_t_db(name , contact ,  request.path , "St_wi_pass", Users , db  , session)
+
+        if  account_presence != None:
+            return account_presence  
+        
+        passwordHash=ph.hash(password)
+        privateKey,publicKey=generateKeypair()
+
+        add_details = si.add_account(db , Users , name , contact , passwordHash, privateKey, publicKey, session, url_for('signup'))
+ 
+        if add_details != None:
+            return add_details  
+        else:
+            return redirect(url_for('index'))
+
+
     return "signup"
 
 
