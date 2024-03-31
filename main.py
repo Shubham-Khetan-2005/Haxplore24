@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 import login_system as ls
 
 app =Flask(__name__)
+db = SQLAlchemy(app)
 
 app.secret_key = "super-secret-key"
 app.config['SECRET_KEY'] = '12345'
@@ -13,6 +14,11 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# Binding both the databses to the sqlalchemy uri...
+SQLALCHEMY_BINDS = {
+    'haxplore':        'mysql://root:@localhost/haxplore',
+}
+app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
 
 @login_manager.user_loader
 def load_user(details):

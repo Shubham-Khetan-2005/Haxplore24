@@ -8,10 +8,11 @@ from random import choice
 
 class User():
     
-    def __init__(self,user_name,user_email,role,sno):
+    def __init__(self,user_name,user_email,is_admin,sno, user_contact):
         self.name = user_name
         self.email = user_email
-        self.role = role
+        self.contact = user_contact
+        self.is_admin = is_admin
         self.user_id = sno
         
 
