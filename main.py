@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect , url_for, session, jsonify , Response , send_file
 from flask_login import LoginManager , login_required , login_user , logout_user  , current_user
 from flask_sqlalchemy import SQLAlchemy
