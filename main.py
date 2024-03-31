@@ -19,6 +19,26 @@ SQLALCHEMY_BINDS = {
 }
 app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
 
+# defining model
+class Users(db.Model):
+    
+    # Students information table class...
+    __tablename__ = 'users'
+
+    """
+    Data base (users) rows structure -
+    private_key , id  , name , contact , password_hash, public_key
+    """
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+    contact = db.Column(db.String(), nullable=False)
+    password_hash = db.Column(db.String(), nullable=False)
+    private_key = db.Column(db.String(), nullable=False)
+    public_key = db.Column(db.String(), nullable=False)
+
+
+
 @login_manager.user_loader
 def load_user(details):
     
