@@ -1,0 +1,225 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>TempTick</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:400,700"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Custom styles for this template-->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Bootstrap files (jQuery first, then Popper.js, then Bootstrap JS) -->
+    <link
+      href="http://www.jqueryscript.net/css/jquerysctipttop.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"
+      type="text/javascript"
+    ></script>
+    <!-- <link rel="stylesheet" href="css.css"> -->
+    <link rel="stylesheet" href="static/css/nav.css" />
+    <link rel="stylesheet" href="static/css/scroll.css" />
+    <link rel="stylesheet" href="sign-up.css" />
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <style>
+      .fa-eye:hover {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body onload="loader_true()" style="background-color: white; color: black">
+    <!-- Image and text -->
+    <nav class="navbar navbar-light bg-light pl-5 pt-3">
+      <a class="navbar-brand" href="./" style="font-size: 2rem">
+        <img
+          src="static/image/logo.jpg"
+          width="30"
+          height="30"
+          class="d-inline-block align-top"
+          alt=""
+          style="width: 45px; height: 45px; border-radius: 25%"
+        />
+        Haxplore
+      </a>
+    </nav>
+    <div id="unknown"></div>
+    <div
+      class="mt-2 ml-1 mr-1 d-flex"
+      style="
+        box-sizing: border-box;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-wrap: wrap;
+      "
+    >
+      <div class="signup-form">
+        <form
+          action="/signup-patient"
+          method="post"
+          onSubmit="return checkPassword(this)"
+        >
+          <h2>Login</h2>
+          
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-phone"></i></span>
+              <input
+                type="text"
+                pattern="^([0-9]){10}$"
+                title="Phone Number Must Only Contain Digits And Must Be 10 Digit Long"
+                class="form-control"
+                name="phone"
+                id="phone "
+                value="<%=values.contact%>"
+                placeholder="Phone Number"
+                required="required"
+                maxlength="10"
+                minlength="10"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+              <input
+                type="password"
+                class="form-control"
+                name="password"
+                id="password"
+                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                title="Password Must Contain At Least 8 Charcters Including A Number , A Lower Case Charcter And A Upper Case Character. "
+                placeholder="Password"
+                required="required"
+                autocomplete="on"
+              />
+              <i
+                class="far fa-eye"
+                style="margin-left: 6px; margin-top: 6px"
+                id="togglePassword"
+              ></i>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              Next
+            </button>
+          </div>
+          <p class="small text-center">
+            By clicking the Next button, you agree to our <br /><a href="#"
+              >Terms &amp; Conditions</a
+            >, and <a href="#">Privacy Policy</a>.
+          </p>
+        </form>
+        <div class="text-center">
+          Don't have an account? <a href="sign-up.html">Sign Up here</a>.
+        </div>
+      </div>
+      
+    </div>
+    <div id="preloader"></div>
+  </body>
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+  <script>
+    if ("<%=values.error%>" == "true") {
+      console.log("hp")
+      let elee = document.getElementById("unknown");
+      elee.innerHTML = `<div class="alert alert-danger alert-dismissible fade show" role="alert"><span>There was some problem, either email is already in use or there is problem in connecting to the server<i></i></span><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button></div >`;
+    }
+
+    function loader_true() {
+      var loader = document.getElementById("preloader");
+      loader.style.display = "none";
+    }
+
+    const password = document.getElementById("password");
+    const confirm_password = document.getElementById("confirm_password");
+
+    function checkPassword(form) {
+      if (password.value == confirm_password.value) {
+        let elee = document.getElementById("unknown");
+        elee.innerHTML = "";
+        return true;
+      } else {
+        let elee = document.getElementById("unknown");
+        elee.innerHTML = `<div id = "hello_message" class="alert alert-danger alert-dismissible fade show" role="alert"><span class="mb-0">Your password and confirm password is not matching! Please try again.</span><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div >`;
+        password.value = "";
+        confirm_password.value = "";
+        return false;
+      }
+    }
+
+    const togglePassword = document.querySelector("#togglePassword");
+    const togglePassword1 = document.querySelector("#toggleconfirmPassword");
+    const password2 = document.querySelector("#password");
+    const password1 = document.querySelector("#confirm_password");
+
+    togglePassword.addEventListener("click", function (e) {
+      // toggle the type attribute
+      const type =
+        password2.getAttribute("type") === "password" ? "text" : "password";
+      password2.setAttribute("type", type);
+      // toggle the icon
+      this.classList.toggle("fa-eye-slash");
+    });
+    togglePassword1.addEventListener("click", function (e) {
+      // toggle the type attribute
+      const type =
+        password1.getAttribute("type") === "password" ? "text" : "password";
+      password1.setAttribute("type", type);
+      // toggle the icon
+      this.classList.toggle("fa-eye-slash");
+    });
+  </script>
+</html>
