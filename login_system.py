@@ -40,24 +40,3 @@ def get_values(request , *args):
         return_values.append(request.form.get(item))
     
     return return_values
-
-    try:
-
-        user_name = account.user_name
-        phone_no = account.user_phone
-        email = account.user_email
-
-        if role == "Student":
-            enter_values = dbase(user_name = user_name, user_phone = phone_no, user_email = email , user_password = password)
-
-        elif role == "Teacher":
-            enter_values = dbase2(user_name = user_name, user_phone = phone_no, user_email = email , user_password = password)
-
-        db.session.add(enter_values)
-        db.session.delete(account)
-        db.session.commit()
-        return None
-
-    except Exception:
-        fe.server_contact_error()
-        return "Problem In Contacting"
