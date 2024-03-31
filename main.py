@@ -86,7 +86,7 @@ class mandir_3(db.Model):
     ticket_amount = db.Column(db.Integer, nullable=False)
     date_booking = db.Column(db.Date(), nullable=False)
     slot_booking = db.Column(db.String(), nullable=False)
-mydb={"Ram Mandir":mandir_1,"Akshardam":mandir_2,"Murdeshwar":mandir_3}
+mydb={"Ram_Mandir":mandir_1,"Akshardam":mandir_2,"Murdeshwar":mandir_3}
 
 admin.add_view(ModelView(Users,db.session,endpoint='naitik'))
 
@@ -231,10 +231,15 @@ def signup():
 def logout():
     logout_user()
     return redirect("/")
-
-@app.route("/transaction",methods=['GET','POST'])
+@app.route("/online_darshan")
 @login_required
-def transaction():
+def logout():
+    logout_user()
+    return redirect("/")
+
+@app.route("/transaction/<string:slug>",methods=['GET','POST'])
+@login_required
+def transaction(slug):
     if current_user.is_authenticated:
         return render_template("transaction.html")
     if request.method=="POST":
@@ -244,10 +249,9 @@ def transaction():
             tx=Transaction(remove_escapeChar(to_string(publicKey,True)),"SYSTEM",int(session["amount"]))   
             tx.sign((privateKey,publicKey))
             difficulty=4;
-            # myChain.minePendingTransactions(publicKey)
-            block=Block(transactions=[tx],previousHash=mydb.getLatestBlock().hash)
+            block=Block(transactions=[tx],previousHash=mydb[slug].getLatestBlock().hash)
             block.mineBlock(difficulty,"SYSTEM")
-            mydb.add(block) #add block to db
+            # mydb[slug].add(block) #add block to db
         except Exception as e:
             print(e)
         
