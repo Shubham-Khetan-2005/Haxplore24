@@ -65,3 +65,16 @@ def check_in_t_db(user_contact ,session_var , dbase , db ,session):
         session[session_var] = {"contact":user_contact}
         fe.some_went_wrong() 
         return None
+    
+def get_key_pair(dbase, user_id):
+    try:
+        check_in_datbase = dbase.query.filter_by(id = user_id).first()
+        if check_in_datbase != None :     
+            return check_in_datbase.public_key, check_in_datbase.private_key
+        else:
+            fe.user_not_found()
+            return None, None
+
+    except Exception:
+        fe.some_went_wrong() 
+        return None, None

@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import login_system as ls
 from ecdsa import SigningKey
 from argon2 import PasswordHasher
-from Blockchain.blockChain import BlockChain
+from Blockchain.blockChain import BlockChain,Block
 from Blockchain.transaction import Transaction
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -15,7 +15,6 @@ import re
 import flash_errors as fe
 
 ph=PasswordHasher()
-mychain=BlockChain()
 MAX_TRANSACTIONS=1 
 app =Flask(__name__)
 # Binding both the databses to the sqlalchemy uri...
@@ -31,8 +30,6 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 publicKeys=set()
 # Fetch all publicKey from dataset and store in publicKey
-
-
 # defining model
 class Users(db.Model):
     
@@ -50,6 +47,46 @@ class Users(db.Model):
     password_hash = db.Column(db.String(), nullable=False)
     private_key = db.Column(db.String(), nullable=False)
     public_key = db.Column(db.String(), nullable=False)
+
+class mandir_1(db.Model):
+    
+    # Students information table class...
+    __tablename__ = 'mandir_1'
+
+
+    current_hash = db.Column(db.String(), primary_key=True)
+    previous_hash = db.Column(db.String(), nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+    ticket_amount = db.Column(db.Integer, nullable=False)
+    date_booking = db.Column(db.Date(), nullable=False)
+    slot_booking = db.Column(db.String(), nullable=False)
+
+class mandir_2(db.Model):
+    
+    # Students information table class...
+    __tablename__ = 'mandir_2'
+
+
+    current_hash = db.Column(db.String(), primary_key=True)
+    previous_hash = db.Column(db.String(), nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+    ticket_amount = db.Column(db.Integer, nullable=False)
+    date_booking = db.Column(db.Date(), nullable=False)
+    slot_booking = db.Column(db.String(), nullable=False)
+
+class mandir_3(db.Model):
+    
+    # Students information table class...
+    __tablename__ = 'mandir_3'
+
+
+    current_hash = db.Column(db.String(), primary_key=True)
+    previous_hash = db.Column(db.String(), nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+    ticket_amount = db.Column(db.Integer, nullable=False)
+    date_booking = db.Column(db.Date(), nullable=False)
+    slot_booking = db.Column(db.String(), nullable=False)
+mydb={"Ram Mandir":mandir_1,"Akshardam":mandir_2,"Murdeshwar":mandir_3}
 
 admin.add_view(ModelView(Users,db.session,endpoint='naitik'))
 
@@ -195,6 +232,27 @@ def logout():
     logout_user()
     return redirect("/")
 
+@app.route("/transaction",methods=['GET','POST'])
+@login_required
+def transaction():
+    if current_user.is_authenticated:
+        return render_template("transaction.html")
+    if request.method=="POST":
+        publicKey,privateKey=ls.get_key_pair(Users,current_user.user_id)
+        if not (publicKey & privateKey): redirect('/')
+        try:
+            tx=Transaction(remove_escapeChar(to_string(publicKey,True)),"SYSTEM",int(session["amount"]))   
+            tx.sign((privateKey,publicKey))
+            difficulty=4;
+            # myChain.minePendingTransactions(publicKey)
+            block=Block(transactions=[tx],previousHash=mydb.getLatestBlock().hash)
+            block.mineBlock(difficulty,"SYSTEM")
+            mydb.add(block) #add block to db
+        except Exception as e:
+            print(e)
+        
+        
+    
 
 
 if __name__ == "__main__":
