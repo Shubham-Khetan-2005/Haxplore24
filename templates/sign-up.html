@@ -86,7 +86,7 @@
     >
       <div class="signup-form">
         <form
-          action="/signup-patient"
+          action="/signup"
           method="post"
           onSubmit="return checkPassword(this)"
         >
@@ -116,7 +116,7 @@
                 pattern="^([0-9]){10}$"
                 title="Phone Number Must Only Contain Digits And Must Be 10 Digit Long"
                 class="form-control"
-                name="phone"
+                name="contact"
                 id="phone "
                 value="<%=values.contact%>"
                 placeholder="Phone Number"

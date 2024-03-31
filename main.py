@@ -8,16 +8,16 @@ from Blockchain.blockChain import BlockChain
 from Blockchain.transaction import Transaction
 import pymysql
 pymysql.install_as_MySQLdb()
+import signup as si
+import re
 
 ph=PasswordHasher()
 mychain=BlockChain()
 MAX_TRANSACTIONS=1 
 app =Flask(__name__)
 # Binding both the databses to the sqlalchemy uri...
-SQLALCHEMY_BINDS = {
-    'haxplore':        'mysql://root:@localhost/haxplore',
-}
-app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/haxplore'
 db = SQLAlchemy(app)
 
 app.secret_key = "super-secret-key"
@@ -120,7 +120,37 @@ def login():
 def signup():
     if current_user.is_authenticated:
         return redirect(url_for("index"))
-    return "signup"
+    if request.method == 'POST' :
+
+        name,contact,password = si.get_values(request , 'name' , 'contact' ,'password')
+        print(name, contact, password)
+
+        if None in (name,contact,password) or "" in (name,contact,password) :
+            # fe.some_went_wrong()
+            return redirect("/signup")
+        
+        if not (bool(re.match(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" , password))):
+            # fe.some_went_wrong()
+            return redirect("/signup")
+        
+        account_presence = si.check_in_t_db(name , contact ,  request.path , "St_wi_pass", Users , db  , session)
+
+        if  account_presence != None:
+            print("hello sir")
+            return account_presence  
+        
+        passwordHash=ph.hash(password)
+        privateKey,publicKey=generateKeypair()
+
+        add_details = si.add_account(db , Users , name , contact , passwordHash, privateKey, publicKey, session, url_for('signup'))
+ 
+        if add_details != None:
+            return add_details  
+        else:
+            return redirect(url_for('index'))
+
+
+    return render_template("sign-up.html")
 
 
 @app.route("/logout")

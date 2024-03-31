@@ -1,5 +1,9 @@
-i...
-SQLALCHEMY_BINDS = {
-    'haxplore':        'mysql://root:@localhost/haxplore',
-}
-app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
+
+        else:
+            return None
+
+    except Exception:
+        # fe.server_contact_error()
+        values = {"name":name,"contact": user_contact}
+        session[session_var] = values  
+        return redirect(path) 
