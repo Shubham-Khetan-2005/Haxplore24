@@ -81,8 +81,15 @@ body {
 .signup-form a:hover {
     text-decoration: underline;
 }
+.far{
+    display: inline-block;
+    font: normal normal normal 14px / 1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
 
-.signup-form .fa {
+.signup-form .fa , .signup-form .far{
     font-size: 21px;
     position: relative;
     top: 8px;

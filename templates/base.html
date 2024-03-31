@@ -10,19 +10,24 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-  <title>{%block title %}{%endblock%}</title>
-  {% block style %} {% endblock %}
-
-  <style>
-    .navbar {
-      padding-left: 9rem;
-    }
-  </style>
+    
+    <title>{%block title %}{%endblock%}</title>
+    {% block style %} {% endblock %}
+    
+    <style>
+      .navbar {
+        padding-left: 9rem;
+      }
+      </style>
+      <!-- For Icons -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
 </head>
 
-<body>
+<body onload="loader_true()">
+
+  <!-- Adding Nav Var -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Haxplore</a>
@@ -59,6 +64,8 @@
       </div>
     </div>
   </nav>
+
+  <!-- Adding flashed messages -->
   {% with message = get_flashed_messages()[-1] %}
   {% if message %}
   <ul class=flashes>
@@ -81,8 +88,13 @@
   </ul>
   {% endif %}
   {% endwith %}
-  {%block body%}{%endblock%}
 
+  <!-- Adding body -->
+  {%block body%}
+  {%endblock%}
+
+  <!-- loader -->
+  <div id="preloader"></div>
 
   <!--Bootstrap JS with Popper.js-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -90,5 +102,18 @@
     crossorigin="anonymous"></script>
 
 </body>
-{%block script%}{%endblock%}
+
+
+<!-- Adding Custom Scripts -->
+{%block script%}
+{%endblock%}
+
+<!-- Adding loader -->
+<script>
+    function loader_true() {
+      var loader = document.getElementById("preloader");
+      loader.style.display = "none";
+    }
+</script>
+
 </html>
