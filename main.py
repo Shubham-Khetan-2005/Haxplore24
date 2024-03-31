@@ -6,12 +6,19 @@ from ecdsa import SigningKey
 from argon2 import PasswordHasher
 from Blockchain.blockChain import BlockChain
 from Blockchain.transaction import Transaction
+import pymysql
+pymysql.install_as_MySQLdb()
 
 ph=PasswordHasher()
 mychain=BlockChain()
 MAX_TRANSACTIONS=1 
 app =Flask(__name__)
-# db = SQLAlchemy(app)
+# Binding both the databses to the sqlalchemy uri...
+SQLALCHEMY_BINDS = {
+    'haxplore':        'mysql://root:@localhost/haxplore',
+}
+app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
+db = SQLAlchemy(app)
 
 app.secret_key = "super-secret-key"
 app.config['SECRET_KEY'] = '12345'
@@ -22,29 +29,24 @@ login_manager.login_view = 'login'
 publicKeys=set()
 # Fetch all publicKey from dataset and store in publicKey
 
-# Binding both the databses to the sqlalchemy uri...
-# SQLALCHEMY_BINDS = {
-#     'haxplore':        'mysql://root:@localhost/haxplore',
-# }
-# app.config['SQLALCHEMY_BINDS'] = SQLALCHEMY_BINDS
 
 # defining model
-# class Users(db.Model):
+class Users(db.Model):
     
-#     # Students information table class...
-#     __tablename__ = 'users'
+    # Students information table class...
+    __tablename__ = 'users'
 
-#     """
-#     Data base (users) rows structure -
-#     private_key , id  , name , contact , password_hash, public_key
-#     """
+    """
+    Data base (users) rows structure -
+    private_key , id  , name , contact , password_hash, public_key
+    """
 
-#     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(), nullable=False)
-#     contact = db.Column(db.String(), nullable=False)
-#     password_hash = db.Column(db.String(), nullable=False)
-#     private_key = db.Column(db.String(), nullable=False)
-#     public_key = db.Column(db.String(), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), nullable=False)
+    contact = db.Column(db.String(), nullable=False)
+    password_hash = db.Column(db.String(), nullable=False)
+    private_key = db.Column(db.String(), nullable=False)
+    public_key = db.Column(db.String(), nullable=False)
 
 
 
