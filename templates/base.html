@@ -7,34 +7,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-  <title>TempTick</title>
+  <title>{%block title %}{%endblock%}</title>
+  {% block style %} {% endblock %}
 
-
-<style>
-  .navbar{
-    padding-left: 9rem;
-  }
-
-  .carousel-item img{
-    width: 100%;
-    height: 100%;
-  }
-
-  .carousel-item{
-    margin-top: 1rem;
-  }
-
-  @media screen and (max-width: 1100px) {
-    
-    .arrow{
-      visibility: hidden;
-      
+  <style>
+    .navbar {
+      padding-left: 9rem;
     }
-  }
-
-</style>
+  </style>
 
 
 </head>
@@ -56,7 +39,8 @@
             <a class="nav-link" href="/online_darshan">Online Darshan</a>
           </li>
           <li class="nav-item dropdown ms-3 me-3">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
               Live Status
             </a>
             <ul class="dropdown-menu dropdown-menu-dark " aria-labelledby="navbarDarkDropdownMenuLink">
@@ -67,95 +51,44 @@
           </li>
         </ul>
         <ul class="navbar-nav mb-2 mb-lg-0 ms-auto me-5">
-        <li class="nav-item ">
-          <a type="button" class="btn btn-dark btn-outline-light ms-1 me-1" href="/signup">Sign Up</a>
-          <a type="button" class="btn btn-dark btn-outline-light ms-1 me-1" href="/login">Login</a>
-        </li>
-      </ul>
+          <li class="nav-item ">
+            <a type="button" class="btn btn-dark btn-outline-light ms-1 me-1" href="/signup">Sign Up</a>
+            <a type="button" class="btn btn-dark btn-outline-light ms-1 me-1" href="/login">Login</a>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
-  
-  <center>
-  <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  {% with message = get_flashed_messages()[-1] %}
+  {% if message %}
+  <ul class=flashes>
+    {%if message[0] == "error"%}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{message[1]}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div class="carousel-inner w-75" style="height: 40rem;">
-      <div class="carousel-item active">
-        <img src="{{ url_for('static', filename='image/RamMandir.avif')}}" class="d-block " alt="...">
-        <div class="carousel-caption d-none d-md-block">
-          <h5>Ram Mandir</h5>
-          <p>AI generated Masterpiece.</p>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <img src="{{ url_for('static', filename='image/akshardham.jpg')}}" class="d-block" alt="...">
-        <div class="carousel-caption d-none d-md-block">
-          <h5>Akshardham Temple</h5>
-          <p>Night light Beauty</p>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <img src="{{ url_for('static', filename='image/murdeshwar.webp')}}" class="d-block" alt="...">
-        <div class="carousel-caption d-none d-md-block">
-          <h5>Murdeshwar Temple</h5>
-          <p>...</p>
-        </div>
-      </div>
+    {% endif %}
+    {%if message[0] == "good"%}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{message[1]}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <button class="carousel-control-prev arrow" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next arrow" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-      <span class="carousel-control-next-icon btn-dark" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
+    {% endif %}
+  </ul>
+  {% endif %}
+  {% endwith %}
+  {%block body%}{%endblock%}
 
-  <div class="RamMandir w-75">
-  <h1>
-    <br>
-    Ram mandir
-  </h1>
-  <h5>
-    
-    The Ram Mandir, also known as the Ram Janmabhoomi Temple, holds a sacred place in the hearts of millions of Hindus worldwide. Situated in Ayodhya, Uttar Pradesh, India, this temple is believed to mark the very spot where Lord Ram, an embodiment of righteousness, courage, and devotion, was born.
-    <br>
-    The significance of the Ram Mandir lies deeply embedded in Hindu mythology and religious beliefs. According to the epic Ramayana, Ayodhya is described as the birthplace of Lord Ram, the seventh avatar of the Hindu god Vishnu. Lord Ram is revered as the epitome of dharma (righteousness) and is regarded as an ideal king, husband, son, and warrior. His life and teachings serve as a guiding light for millions of devotees, emphasizing the importance of morality, duty, and devotion.
- 
-  </h5>
-</div>
-  <br>
 
-  <div class="Akshardham w-75" >
-  <h1>
-    Akshardham Temple
-  </h1>
-  <h5>
-    'Akshardham' means the divine abode of God. It is hailed as an eternal place of devotion, purity and peace. Swaminarayan Akshardham at New Delhi is a Mandir – an abode of God, a Hindu house of worship, and a spiritual and cultural campus dedicated to devotion, learning and harmony. Timeless Hindu spiritual messages, vibrant devotional traditions and ancient architecture all are echoed in its art and architecture.The mandir is a humble tribute to Bhagwan Swaminarayan (1781- 1830), the avatars, devas and great sages of Hinduism. The traditionally-styled complex was inaugurated on 6 November 2005 with the blessings of HH Pramukh Swami Maharaj and through the devoted efforts of skilled artisans and volunteers
-  </h5>
-</div>
-  <br>
-  <div class="Murdeshwar w-75">
-  <h1>
-    Murdeshwar Temple
-  </h1>
-  <h5>
-    The Murdeshwar Temple is a famous Hindu temple dedicated to Lord Shiva, located in the town of Murdeshwar in the state of Karnataka, India. The temple is situated on the coast of the Arabian Sea and is renowned for its magnificent architecture and religious significance.
-    <br>
-    One of the main attractions of the Murdeshwar Temple is its towering 123-feet (37 meters) high statue of Lord Shiva, which is the second tallest statue of Lord Shiva in the world. This towering statue is surrounded by a serene and picturesque landscape, making it a popular pilgrimage site and tourist destination.
-    <br>
-    The temple complex also includes other shrines dedicated to various Hindu deities, as well as a sacred pond known as Koti Teertha. The temple receives a large number of devotees and visitors throughout the year, especially during festivals like Maha Shivaratri
-  </h5>
-</div>
-</center>
-  
   <!--Bootstrap JS with Popper.js-->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
 
 </body>
+{%block script%}{%endblock%}
 </html>
