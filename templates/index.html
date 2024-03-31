@@ -6,41 +6,40 @@
 
 {%block style%}
 <style>
-    .carousel-item img {
-        width: 100%;
-        height: 100%;
+  .carousel-item img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .carousel-item {
+    margin-top: 1rem;
+  }
+
+  @media screen and (max-width: 1100px) {
+
+    .arrow {
+      visibility: hidden;
+
     }
+  }
 
-    .carousel-item {
-        margin-top: 1rem;
-    }
+  .RamMandir {
+    background-color: #f7f7f9;
+    padding: 1rem;
+    margin: 1rem;
+  }
 
-    @media screen and (max-width: 1100px) {
+  .Akshardham {
+    background-color: #f7f7f9;
+    padding: 1rem;
+    margin: 1rem;
+  }
 
-        .arrow {
-            visibility: hidden;
-
-        }
-    }
-
-    .RamMandir {
-      background-color: #f7f7f9;
-      padding: 1rem;
-      margin: 1rem;
-    }
-
-    .Akshardham {
-      background-color: #f7f7f9;
-      padding: 1rem;
-      margin: 1rem;
-    }
-
-    .Murdeshwar {
-      background-color: #f7f7f9;
-      margin: 1rem;
-      padding: 1rem;
-    }
-
+  .Murdeshwar {
+    background-color: #f7f7f9;
+    margin: 1rem;
+    padding: 1rem;
+  }
 </style>
 {%endblock%}
 
@@ -125,10 +124,10 @@
           </div>
           <div class="modal-body">
             <form action="/action_page.php">
-              <label for="Date">Select Date:</label>
-              <input type="date" id="Date" name="Date" />
-              <br />
+              <label for="datepicker">Select Date:</label>
+              <div id="add_datepicker1" style="display: inline-block;"></div>
 
+              <br />
               <br />
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
@@ -164,7 +163,7 @@
                   Close
                 </button>
                 <input type="submit" class="btn btn-primary">
-              </input>
+                </input>
               </div>
             </form>
           </div>
@@ -207,7 +206,7 @@
           <div class="modal-body">
             <form action="/action_page.php">
               <label for="Date">Select Date:</label>
-              <input type="date" id="Date" name="Date" />
+              <div id="add_datepicker2" style="display: inline-block;"></div>
               <br />
 
               <br />
@@ -245,7 +244,7 @@
                   Close
                 </button>
                 <input type="submit" class="btn btn-primary">
-              </input>
+                </input>
               </div>
             </form>
           </div>
@@ -292,7 +291,7 @@
           <div class="modal-body">
             <form action="/action_page.php">
               <label for="Date">Select Date:</label>
-              <input type="date" id="Date" name="Date" />
+              <div id="add_datepicker3" style="display: inline-block;"></div>
               <br />
 
               <br />
@@ -329,7 +328,7 @@
                   Close
                 </button>
                 <input type="submit" class="btn btn-primary">
-              </input>
+                </input>
               </div>
             </form>
           </div>
@@ -340,4 +339,36 @@
     <br />
   </div>
 </center>
+{%endblock%}
+
+{%block script%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.js"></script>
+<script>
+
+  const date = new Date();
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let yer = date.getFullYear();
+  if (month < 10) {
+    month = "0" + month
+  }
+  if (day < 10) {
+    day = "0" + day
+  }
+
+  // This arrangement can be altered based on how we want the date's format to appear.
+  let currentDate = `${ yer }-${ month }-${day}`;
+  $(document).ready(function () {
+    let elem = document.getElementById("add_datepicker1")
+    elem.innerHTML = `<input class="datepicker" type="date" id="datepicker" name="Date" min="${currentDate}" />`
+     elem = document.getElementById("add_datepicker2")
+    elem.innerHTML = `<input class="datepicker" type="date" id="datepicker" name="Date" min="${currentDate}" />`
+     elem = document.getElementById("add_datepicker3")
+    elem.innerHTML = `<input class="datepicker" type="date" id="datepicker" name="Date" min="${currentDate}" />`
+    console.log(elem)
+    // elem.setAttribute("min", "2024-03-10")
+  })
+</script>
 {%endblock%}
