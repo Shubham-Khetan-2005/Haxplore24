@@ -6,6 +6,8 @@ from ecdsa import SigningKey
 from argon2 import PasswordHasher
 from Blockchain.blockChain import BlockChain
 from Blockchain.transaction import Transaction
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 import pymysql
 pymysql.install_as_MySQLdb()
 import signup as si
@@ -19,7 +21,7 @@ app =Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/haxplore'
 db = SQLAlchemy(app)
-
+admin = Admin(app)
 app.secret_key = "super-secret-key"
 app.config['SECRET_KEY'] = '12345'
 
@@ -48,6 +50,7 @@ class Users(db.Model):
     private_key = db.Column(db.String(), nullable=False)
     public_key = db.Column(db.String(), nullable=False)
 
+admin.add_view(ModelView(Users,db.session,endpoint='naitik'))
 
 
 def to_string(key,isPublic):
