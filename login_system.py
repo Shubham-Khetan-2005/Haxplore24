@@ -1,7 +1,7 @@
 """
     Module works using flask sqlalchemy and its classes are accepted as arguments in the respective functions...   """
 
-import numpy
+# import numpy
 from flask import redirect
 import string
 from random import choice
@@ -48,7 +48,7 @@ def find_account(email,dbase1 , dbase2):
 
     except Exception:
 
-        fe.server_contact_error()
+        # fe.server_contact_error()
         return "Problem in contacting" , None
 
 
@@ -69,7 +69,7 @@ def get_user_details(dbase,dbase2,role,sno):
         
     except Exception:
 
-        fe.server_contact_error()        
+        # fe.server_contact_error()        
         return None , None
 
 
