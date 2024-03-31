@@ -12,12 +12,14 @@ def get_values(request , *args):
 def add_account(db, dbase , user_name , user_contact  , passwordHash , privateKey, publicKey ,session, path):
     """If there is  no problem in creating a account..."""
     try:
+        print(user_contact)
         enter_values = dbase(name = user_name , contact = user_contact,
             password_hash = passwordHash ,
             public_key = publicKey, private_key = privateKey)
 
         db.session.add(enter_values)
         db.session.commit() 
+        print(user_contact)
 
         # fs.acc_created()           
         

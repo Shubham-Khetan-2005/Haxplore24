@@ -3,14 +3,12 @@
 
 # import numpy
 from flask import redirect
-import string
+import flash_errors as fe
 from random import choice
 
 class User():
     
-    def __init__(self,user_name,user_email,is_admin,sno, user_contact):
-        self.name = user_name
-        self.email = user_email
+    def __init__(self,user_contact, sno, is_admin = False):
         self.contact = user_contact
         self.is_admin = is_admin
         self.user_id = sno
@@ -20,7 +18,7 @@ class User():
         return True
 
     def get_id(self):
-        return {"user":self.user_id , "role":self.role}
+        return {"id":self.user_id , "contact":self.contact}
 
     def is_authenticated(self):
         return True
@@ -40,3 +38,32 @@ def get_values(request , *args):
         return_values.append(request.form.get(item))
     
     return return_values
+
+def get_details(user_contact, dbase):
+    try:
+        check_in_datbase = dbase.query.filter_by(contact = user_contact).first()
+        if check_in_datbase != None :    
+            return check_in_datbase
+        else:
+            return None
+
+    except Exception:
+        fe.some_went_wrong() 
+        return None
+
+def check_in_t_db(user_contact ,session_var , dbase , db ,session):
+
+    try:
+        check_in_datbase = dbase.query.filter_by(contact = user_contact).first()
+        print(check_in_datbase)
+        if check_in_datbase != None :
+            values = {"contact": user_contact}       
+            return check_in_datbase
+        else:
+            fe.user_not_found()
+            return None
+
+    except Exception:
+        session[session_var] = {"contact":user_contact}
+        fe.some_went_wrong() 
+        return None

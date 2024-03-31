@@ -10,6 +10,7 @@ import pymysql
 pymysql.install_as_MySQLdb()
 import signup as si
 import re
+import flash_errors as fe
 
 ph=PasswordHasher()
 mychain=BlockChain()
@@ -67,6 +68,7 @@ def remove_escapeChar(word):
             res+=i
 
     return res
+
 def generateKeypair():
     print("Generating Key")
     n=len(publicKeys)
@@ -80,10 +82,13 @@ def generateKeypair():
 @login_manager.user_loader
 def load_user(details):
     
-    user_id = details["user"]
-    user_role = details["role"]
-    dict = {'user_id' : user_id, 'user_role':user_role}
-    return 
+    user_contact = details["contact"]
+    user_id = details["id"]
+    user_name = ls.get_details(user_contact, Users)
+
+    if(user_name == None):
+        return
+    return ls.User(user_contact, user_id, user_name)
 
 
 @app.errorhandler(404) 
@@ -102,19 +107,43 @@ def login():
         return redirect(url_for("index"))
 
     if request.method == "POST":
-        email = request.form.get("contact")
-        password = request.form.get("password")
+        
 
-        user_name = ""
-        user_email = ""
-        user_id = ""
+        user_contact, user_password = ls.get_values(request, 'contact', 'password')
+        if None in (user_contact,user_password) or "" in (user_contact,user_password) :
+            fe.user_beta_msti_nhi()
+            return redirect("/login")
+        
+        if not (bool(re.match(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" , user_password))):
+            fe.user_beta_msti_nhi()
+            return redirect("/login")
 
-        # login_user(user_to_log)
-        # fs.login_success()
+        user_account = ls.check_in_t_db(user_contact, "log-details", Users, db, session)
+        
+        if(user_account == None):
+            redirect(url_for("login"))
+        
+        if(not ph.verify(user_account.password_hash, user_password)):
+            fe.wrng_pass()
+            session['log-details'] = user_password
+            redirect(url_for("login"))
+        
+        user_contact = user_account.contact
+        user_id = user_account.id
+        user_to_log = ls.User(user_contact, user_id)
+
+        login_user(user_to_log)
+        fe.login_success()
 
         return redirect(url_for("index"))
 
-    return "index"
+    if "log-details" in session:
+        return_contact = session["log-details"]
+        session.pop("log-details")
+    else:
+        return_contact = ""
+
+    return render_template("login.html", values = {'contact' : return_contact})
 
 @app.route("/signup", methods = ['GET', 'POST'])
 def signup():
