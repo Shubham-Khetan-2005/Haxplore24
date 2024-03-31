@@ -152,34 +152,38 @@ def signup():
     if request.method == 'POST' :
 
         name,contact,password = si.get_values(request , 'name' , 'contact' ,'password')
-        print(name, contact, password)
 
         if None in (name,contact,password) or "" in (name,contact,password) :
-            # fe.some_went_wrong()
+            fe.some_went_wrong()
             return redirect("/signup")
         
         if not (bool(re.match(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" , password))):
-            # fe.some_went_wrong()
+            fe.some_went_wrong()
             return redirect("/signup")
         
-        account_presence = si.check_in_t_db(name , contact ,  request.path , "St_wi_pass", Users , db  , session)
+        account_presence = si.check_in_t_db(name , contact ,  request.path , "acc_requested", Users , db  , session)
 
         if  account_presence != None:
-            print("hello sir")
             return account_presence  
         
         passwordHash=ph.hash(password)
         privateKey,publicKey=generateKeypair()
 
-        add_details = si.add_account(db , Users , name , contact , passwordHash, privateKey, publicKey, session, url_for('signup'))
+        add_details = si.add_account(db , Users , name , contact , passwordHash, privateKey, publicKey, session, "acc_requested", url_for('signup'))
  
         if add_details != None:
             return add_details  
         else:
             return redirect(url_for('index'))
+        
+    val = {'name' : "", 'contact':""}
+
+    if "acc_requested" in session:
+        val = session['acc_requested']
+        session.pop("acc_requested")
 
 
-    return render_template("sign-up.html")
+    return render_template("sign-up.html", values = val)
 
 
 @app.route("/logout")

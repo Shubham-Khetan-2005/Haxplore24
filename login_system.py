@@ -55,9 +55,7 @@ def check_in_t_db(user_contact ,session_var , dbase , db ,session):
 
     try:
         check_in_datbase = dbase.query.filter_by(contact = user_contact).first()
-        print(check_in_datbase)
-        if check_in_datbase != None :
-            values = {"contact": user_contact}       
+        if check_in_datbase != None :     
             return check_in_datbase
         else:
             fe.user_not_found()
