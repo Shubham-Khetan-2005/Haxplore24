@@ -140,7 +140,7 @@ admin.add_view(TempleView(mydb["9999999999"],db.session,endpoint='mandir1'))
 admin.add_view(TempleView(mydb["5555555555"],db.session,endpoint='mandir2'))
 admin.add_view(TempleView(mydb["7777777777"],db.session,endpoint='mandir3'))
 
-config = pdfkit.configuration(wkhtmltopdf = r"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")  
+config = pdfkit.configuration(wkhtmltopdf = r"/usr/local/bin/wkhtmltopdf")
 
 def to_string(key,isPublic):
     if isPublic:
@@ -396,8 +396,8 @@ def transaction():
         fe.dnt_ac()
         redirect("/")
 
-    if 'to_redirect'  in session:
-        return redirect('/')
+    # if 'to_redirect'  in session:
+    #     return redirect('/')
 
     if request.method=="POST":
         if 'ticket' not in session:
