@@ -55,9 +55,12 @@ def get_details(user_contact, dbase):
 def get_public_key(dbase ,db ):
     # return "hp"
     try:
-        list =[]
+        print("in")
+        list =set()
         check_in_datbase = dbase.query.all()
-        list.append(check_in_datbase.previous_hash)
+        print(check_in_datbase)
+        for items in check_in_datbase:
+            list.add(items.public_key)
         return list
     except :
         return None
