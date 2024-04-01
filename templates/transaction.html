@@ -114,7 +114,7 @@ span.price {
         <div class="row">
           <div class="col-50">
             
-
+            <a id = "a" visibility = 'hidden'></a>
           <div class="col-50">
             <h3>Payment</h3>
             <label for="fname">Accepted Cards</label>
@@ -140,7 +140,7 @@ span.price {
 
         </div>
         
-        <input type="submit" value="Continue" class="btn">
+        <input type="submit" value="Continue" class="btn" id="submit">
       </form>
     </div>
   </div>
@@ -148,5 +148,42 @@ span.price {
     
   </div>
 </div>
+{%endblock%}  
 
-{%endblock%}    
+{%block script%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+
+$('#submit').click(function() {
+    $.ajax({
+        url:  window.location.href,
+        type: 'POST',
+        data: {
+            email: 'email@example.com',
+            message: 'hello world!'
+        },
+        success: function(response) {
+          var blob = new Blob([response]);
+
+            // Create a URL for the blob
+            var url = URL.createObjectURL(blob);
+
+            // Create a temporary anchor element
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'Ticket.pdf';  // Set the desired filename
+
+            // Trigger a click event on the anchor element to start the download
+            document.body.appendChild(a);
+            a.click();
+
+            // Cleanup
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            window.location = "/"
+        }               
+    });
+});
+</script>
+
+{%endblock%}

@@ -199,11 +199,6 @@ def not_found(e):
 
 @app.route("/", methods = ['GET'])
 def index():
-    if current_user.is_authenticated:
-        print("hello")
-        print(current_user.user_name)
-        print(current_user.contact)
-        print(current_user.user_id)
     return render_template("index.html")
 
 @app.route("/login", methods = ['GET', 'POST'])
@@ -315,6 +310,8 @@ def rammandir():
         people = int(request.form.get('devotee'))
         date = request.form.get('datepicker1')
 
+        print("printing")
+        print(slot, price, people, date)
 
         if None in (slot,price,people,date) or "" in (slot,price,people,date) :
             fe.some_went_wrong()
@@ -323,6 +320,8 @@ def rammandir():
         if price not in [100, 300, 500] or slot not in ["option1", "option2"]:
             fe.user_beta_msti_nhi()
             return redirect("/")
+        print("printing")
+        print(slot, price, people, date)
         if(slot == 'option1'):
             slot = "Slot 1 (7:00 AM to 11:00 AM)"
         else :
@@ -421,32 +420,17 @@ def transaction():
         block=Block(transactions=[tx],previousHash=(mydb[session['ticket']['temple']].query.all()[-1]).current_hash)
         block.mineBlock(difficulty,publicKey)
         ans =  ls.add_transaction(db, mydb[session['ticket']['temple']], session['ticket'], current_user.user_id, block.hash ,block.previousHash,session) #add block to db
-        session["dwn_inf"] = {"id":current_user.user_id, "current_hash":block.hash, "previous_hash":block.previousHash, "inf" : session['ticket']}
+        session["dwn_inf"] = {"id":current_user.user_id, "current_hash":block.hash, "previous_hash":block.previousHash, "inf" : session['ticket'], "name":current_user.user_name, "contact":current_user.contact}
         session.pop('ticket')
-        return redirect(url_for("download"))
+        values = session['dwn_inf']
+        html = render_template("download.html", value = values)
+        pdf = pdfkit.from_string(html, False,  configuration = config)
+        return send_file(BytesIO(pdf), download_name="Ticket.pdf" , as_attachment=True)
 
     if 'ticket' not in session:
         fe.some_went_wrong()
         return redirect('/')
     return render_template("transaction.html")
-                    
-@login_required
-@app.route("/download/",methods=['GET','POST'])
-def download():
-    if(current_user.is_admin):
-        fe.dnt_ac()
-        redirect("/")
-
-    if 'dwn_inf' not in session:
-        fe.some_went_wrong()
-        return redirect('/')
-    values = session['dwn_inf']
-    session.pop('dwn_inf')
-    html = render_template("download.html", value = values)
-    pdf = pdfkit.from_string(html, False,  configuration = config)
-    session["to_redirect"] = True
-    response = send_file(BytesIO(pdf), download_name="Ticket.pdf" , as_attachment=True)
-    return response
                     
 
 if __name__ == "__main__":
