@@ -56,7 +56,7 @@ class Transaction:
             contains pair of keys (private_key,public_key)
         """
         pvt_key,pub_key=signing_keypair
-        if remove_escapeChar(to_string(pub_key,True)) != self.sentFrom:
+        if ((pub_key)) != self.sentFrom:
             raise Exception(f"You Cannot Sign transaction for other's wallets: \n{remove_escapeChar(to_string(pub_key,True))} != \n{self.sentFrom}")
         self.txHash = self.generateHash()
         self.signature = pvt_key.sign(self.txHash.encode())
