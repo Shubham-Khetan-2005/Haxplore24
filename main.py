@@ -29,7 +29,8 @@ app.config['SECRET_KEY'] = '12345'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-publicKeys=set()
+
+pk=set()
 # Fetch all publicKey from dataset and store in publicKey
 # defining model
 class Users(db.Model):
@@ -128,12 +129,12 @@ def remove_escapeChar(word):
 
 def generateKeypair():
     print("Generating Key")
-    n=len(publicKeys)
+    n=len(pk)
     privateKey=publicKey=None
-    while n==len(publicKeys):
+    while n==len(pk):
         privateKey=SigningKey.generate(curve = ecdsa.NIST384p)
         publicKey=privateKey.verifying_key
-        publicKeys.add(to_string(publicKey,True))
+        pk.add(to_string(publicKey,True))
 
     publicKey = publicKey.to_pem()
     public_string = publicKey.decode()
@@ -153,12 +154,7 @@ def load_user(details):
     print(details)
     user_contact = details["contact"]
     user_id = details["id"]
-    user_name = ls.get_details(user_contact, Users)
-    # print(current_user.is_admin)
-    # if(current_user.is_authenticated and current_user.is_admin):
-    #     admin.add_view(ModelView(mydb[current_user.user_name],db.session,endpoint='tickets'))
-    if(user_name == None):
-        return
+    user_name = details["name"]
     return ls.User(user_contact, user_id, user_name)
 
 
@@ -205,9 +201,9 @@ def login():
         user_contact = user_account.contact
         user_id = user_account.id
         user_to_log = ls.User(user_contact,user_account.name, user_id)
-        current_user.user_name="Ram_Mandir"
-        print(current_user.user_name)
-        current_user.is_admin=True
+        # current_user.user_name="Ram_Mandir"
+        # print(current_user.user_name)
+        # current_user.is_admin=True
         login_user(user_to_log)
         if(current_user.is_authenticated and current_user.is_admin):
             admin.add_view(ModelView(mydb[current_user.user_name],db.session,endpoint='tickets'))
@@ -242,7 +238,7 @@ def signup():
 
         if  account_presence != None:
             return account_presence  
-        
+        pk=ls.get_public_key(Users,db)
         passwordHash=ph.hash(password)
         privateKey,publicKey=generateKeypair()
 
