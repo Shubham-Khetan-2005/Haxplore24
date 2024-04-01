@@ -94,24 +94,49 @@ class mandir_3(db.Model):
     slot_booking = db.Column(db.String(), nullable=False)
     no_devotee = db.Column(db.Integer, nullable=False)
 
-mydb={"9979887672":mandir_1,"9328524215":mandir_2,"7359029004":mandir_3}
-class MicroBlogModelView(ModelView):
+mydb={"9999999999":mandir_1,"5555555555":mandir_2,"7777777777":mandir_3}
+'''
+added admin contact in a dictionary due to lack of time, but will be finally stored in a database for all and any temples added
+'''
+class TempleView(ModelView):
     can_edit=False
     can_delete=False
     create_modal = True
     can_view_details = True
-    form_columns = ['user_id','no_devotee','ticket_amount','slot_booking']
+    column_exclude_list = ['previous_hash'] 
     column_filters = ['user_id']
     can_export = True
     def is_accessible(self):
+        '''
+        We added all temples to all admins due to lack of time, but we can use this function to restrict an admin to access only his temple tickets
+        '''
+        return current_user.is_authenticated and current_user.is_admin and 1*(current_user.contact)
+
+    def inaccessible_callback(self, name, **kwargs):
+        # redirect to login page if user doesn't have access
+        return redirect(url_for('login'), next=request.url)
+class UserView(ModelView):
+    can_edit=False
+    can_delete=False
+    can_view_details = True
+    column_exclude_list = ['password_hash','private_key','public_key'] 
+    column_filters = ['contact','id']
+    can_export = True
+    def is_accessible(self):
+        '''
+        We added all temples to all admins due to lack of time, but we can use this function to restrict an admin to access only his temple tickets
+        '''
         return current_user.is_authenticated and current_user.is_admin
 
     def inaccessible_callback(self, name, **kwargs):
         # redirect to login page if user doesn't have access
         return redirect(url_for('login'), next=request.url)
 
-
-admin.add_view(MicroBlogModelView(mydb["9979887672"],db.session,endpoint='tickets'))
+# adding all database views
+admin.add_view(UserView(Users,db.session,endpoint='user'))
+admin.add_view(TempleView(mydb["9999999999"],db.session,endpoint='mandir1'))
+admin.add_view(TempleView(mydb["5555555555"],db.session,endpoint='mandir2'))
+admin.add_view(TempleView(mydb["7777777777"],db.session,endpoint='mandir3'))
 
 
 
@@ -300,7 +325,7 @@ def rammandir():
             slot = "Slot 1 (7:00 AM to 11:00 AM)"
         else :
             slot = "Slot 2 (2:00 PM to 7:00 PM)"
-        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "9979887672"}
+        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "9999999999"}
 
         return redirect("/transaction/")
     
@@ -327,7 +352,7 @@ def akshardham():
         else :
             slot = "Slot 2 (2:30 PM to 6:30 PM)"
 
-        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "9328524215"}
+        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "5555555555"}
 
         return redirect("/transaction/")
     
@@ -355,11 +380,13 @@ def murdeshwar():
         else :
             slot = "Slot 2 (3:00 PM to 8:00 PM)"
 
-        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "7359029004"}
+        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "7777777777"}
 
         return redirect("/transaction/")
 
-
+'''
+DUMMY TRANSACTION PAGE
+'''
 @app.route("/transaction/",methods=['GET','POST'])
 @login_required
 def transaction():
@@ -389,7 +416,7 @@ def transaction():
         block=Block(transactions=[tx],previousHash=(mydb[session['ticket']['temple']].query.all()[-1]).current_hash)
         block.mineBlock(difficulty,publicKey)
         ans =  ls.add_transaction(db, mydb[session['ticket']['temple']], session['ticket'], current_user.user_id, block.hash ,block.previousHash,session) #add block to db
-        session["dwn_inf"] = {"id":current_user.user_id, "current_hash":block.hash, "previous_hash":block.previous_hash, "inf" : session['ticket']}
+        session["dwn_inf"] = {"id":current_user.user_id, "current_hash":block.hash, "previous_hash":block.previousHash, "inf" : session['ticket']}
         session.pop('ticket')
         return redirect(url_for("download"))
 
