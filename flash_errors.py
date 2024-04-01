@@ -19,3 +19,5 @@ def wrng_pass():
     return flash(("error", "Either contact no. or passward is wrong"))
 def user_not_found():
     return flash(("error", "User not found"))
+def dnt_ac():
+    return flash(("error", "You do not have access to this page"))

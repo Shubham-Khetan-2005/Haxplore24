@@ -363,6 +363,10 @@ def murdeshwar():
 @app.route("/transaction/",methods=['GET','POST'])
 @login_required
 def transaction():
+    if(current_user.is_admin):
+        fe.dnt_ac()
+        redirect("/")
+
     if request.method=="POST":
         if 'ticket' not in session:
             fe.some_went_wrong()
@@ -385,11 +389,9 @@ def transaction():
         block=Block(transactions=[tx],previousHash=(mydb[session['ticket']['temple']].query.all()[-1]).current_hash)
         block.mineBlock(difficulty,publicKey)
         ans =  ls.add_transaction(db, mydb[session['ticket']['temple']], session['ticket'], current_user.user_id, block.hash ,block.previousHash,session) #add block to db
+        session["dwn_inf"] = {"id":current_user.user_id, "current_hash":block.hash, "previous_hash":block.previous_hash, "inf" : session['ticket']}
         session.pop('ticket')
-        return ans
-        # except Exception as e:
-        #     fe.some_went_wrong()
-        #     return "hello"
+        return redirect(url_for("download"))
 
     if 'ticket' not in session:
         fe.some_went_wrong()
