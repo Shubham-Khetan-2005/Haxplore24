@@ -98,7 +98,7 @@ class MicroBlogModelView(ModelView):
     can_delete=False
     create_modal = True
     can_view_details = True
-    column_filters = ['contact']
+    column_filters = ['user_id']
     can_export = True
     def is_accessible(self):
         return current_user.is_authenticated and current_user.is_admin
