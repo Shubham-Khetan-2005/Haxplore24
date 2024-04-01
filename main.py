@@ -92,8 +92,20 @@ class mandir_3(db.Model):
     no_devotee = db.Column(db.Integer, nullable=False)
 
 mydb={"Ram_Mandir":mandir_1,"Akshardam":mandir_2,"Murdeshwar":mandir_3}
+class MicroBlogModelView(ModelView):
+    can_edit=False
+    can_delete=False
+    create_modal = True
+    can_view_details = True
+    column_filters = ['contact']
+    can_export = True
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin
 
-admin.add_view(ModelView(Users,db.session,endpoint='naitik'))
+    def inaccessible_callback(self, name, **kwargs):
+        # redirect to login page if user doesn't have access
+        return redirect(url_for('login'), next=request.url)
+
 
 
 def to_string(key,isPublic):
@@ -142,7 +154,9 @@ def load_user(details):
     user_contact = details["contact"]
     user_id = details["id"]
     user_name = ls.get_details(user_contact, Users)
-
+    # print(current_user.is_admin)
+    # if(current_user.is_authenticated and current_user.is_admin):
+    #     admin.add_view(ModelView(mydb[current_user.user_name],db.session,endpoint='tickets'))
     if(user_name == None):
         return
     return ls.User(user_contact, user_id, user_name)
@@ -155,9 +169,11 @@ def not_found(e):
 
 @app.route("/", methods = ['GET'])
 def index():
+    # if current_user.is_authenticated:
+    #     print(current_user.is_admin)
     return render_template("index.html")
 
-@app.route("/login/", methods = ['GET', 'POST'])
+@app.route("/login", methods = ['GET', 'POST'])
 def login():
 
     if current_user.is_authenticated:
@@ -169,7 +185,7 @@ def login():
         user_contact, user_password = ls.get_values(request, 'contact', 'password')
         if None in (user_contact,user_password) or "" in (user_contact,user_password) :
             fe.user_beta_msti_nhi()
-            return redirect("/login/")
+            return redirect("/login")
         
         if not (bool(re.match(r"(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" , user_password))):
             fe.user_beta_msti_nhi()
@@ -179,30 +195,34 @@ def login():
         
         if(user_account == None):
             redirect(url_for("login"))
-        
-        if(not ph.verify(user_account.password_hash, user_password)):
+        try:
+            ph.verify(user_account.password_hash, user_password)
+        except Exception as e:
             fe.wrng_pass()
-            session['log-details'] = user_password
-            redirect(url_for("login"))
+            session['log-details'] = {"contact":user_contact}
+            return redirect(url_for("login"))
         
         user_contact = user_account.contact
         user_id = user_account.id
-        user_to_log = ls.User(user_contact, user_id)
-
+        user_to_log = ls.User(user_contact,user_account.name, user_id)
+        current_user.user_name="Ram_Mandir"
+        print(current_user.user_name)
+        current_user.is_admin=True
         login_user(user_to_log)
+        if(current_user.is_authenticated and current_user.is_admin):
+            admin.add_view(ModelView(mydb[current_user.user_name],db.session,endpoint='tickets'))
         fe.login_success()
-
         return redirect(url_for("index"))
 
     if "log-details" in session:
-        return_contact = session["log-details"]
+        return_contact = session["log-details"]["contact"]
         session.pop("log-details")
     else:
         return_contact = ""
 
     return render_template("login.html", values = {'contact' : return_contact})
 
-@app.route("/signup/", methods = ['GET', 'POST'])
+@app.route("/signup", methods = ['GET', 'POST'])
 def signup():
     if current_user.is_authenticated:
         return redirect(url_for("index"))
@@ -243,7 +263,7 @@ def signup():
     return render_template("sign-up.html", values = val)
 
 
-@app.route("/logout/")
+@app.route("/logout")
 @login_required
 def logout():
     logout_user()

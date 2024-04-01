@@ -8,9 +8,10 @@ from random import choice
 
 class User():
     
-    def __init__(self,user_contact, sno, is_admin = False):
+    def __init__(self,user_contact, user_name, sno, is_admin = False):
         self.contact = user_contact
         self.is_admin = is_admin
+        self.user_name = user_name
         self.user_id = sno
         
 
@@ -18,7 +19,7 @@ class User():
         return True
 
     def get_id(self):
-        return {"id":self.user_id , "contact":self.contact}
+        return {"id":self.user_id , "contact":self.contact, "name":self.user_name}
 
     def is_authenticated(self):
         return True
@@ -27,7 +28,7 @@ class User():
         return False
         
     def __str__(self):
-        return f'{self.user_id} , {self.contact} '
+        return f'{self.user_id} , {self.contact}, {self.user_name}'
 
 
 def get_values(request , *args):
@@ -51,6 +52,16 @@ def get_details(user_contact, dbase):
         fe.some_went_wrong() 
         return None
 
+def get_public_key(dbase ,db ):
+    # return "hp"
+    try:
+        list =[]
+        check_in_datbase = dbase.query.all()
+        list.append(check_in_datbase.previous_hash)
+        return list
+    except :
+        return None
+        
 def check_in_t_db(user_contact ,session_var , dbase , db ,session):
 
     try:
