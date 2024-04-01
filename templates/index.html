@@ -123,7 +123,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/action_page.php">
+            <form action="/rammandir", method = "post">
               <label for="datepicker">Select Date:</label>
               <div id="add_datepicker1" style="display: inline-block;"></div>
 
@@ -144,17 +144,17 @@
               <br />
               <div class="input-group mb-3">
                 <label class="input-group-text" for="inputGroupSelect01">Prices</label>
-                <select class="form-select" id="inputGroupSelect01">
+                <select class="form-select" id="inputGroupSelect01" name = "inputGroupSelect01">
                   <option selected>Choose...</option>
-                  <option value="1">Rs 100</option>
-                  <option value="2">Rs 300</option>
-                  <option value="3">Rs 500</option>
+                  <option value="100">Rs 100</option>
+                  <option value="300">Rs 300</option>
+                  <option value="500">Rs 500</option>
                 </select>
               </div>
               <br />
               <div class="input-group flex-nowrap">
                 <span class="input-group-text" id="addon-wrapping">Number of devotees</span>
-                <input type="INT" class="form-control" placeholder="0" aria-label="0"
+                <input type="number" class="form-control" id="devotee" name = "devotee" placeholder="0" aria-label="0"
                   aria-describedby="addon-wrapping" />
               </div>
               <br />
@@ -204,7 +204,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/action_page.php">
+            <form action="/akshardham/", method = 'post'>
               <label for="Date">Select Date:</label>
               <div id="add_datepicker2" style="display: inline-block;"></div>
               <br />
@@ -226,16 +226,16 @@
               <br />
               <div class="input-group mb-3">
                 <label class="input-group-text" for="inputGroupSelect01">Prices</label>
-                <select class="form-select" id="inputGroupSelect01">
+                <select class="form-select" id="inputGroupSelect01" name = "inputGroupSelect01">
                   <option selected>Choose...</option>
-                  <option value="1">Rs 50</option>
-                  <option value="2">Rs 100</option>
+                  <option value="50">Rs 50</option>
+                  <option value="100">Rs 100</option>
                 </select>
               </div>
               <br />
               <div class="input-group flex-nowrap">
                 <span class="input-group-text" id="addon-wrapping">Number of devotees</span>
-                <input type="INT" class="form-control" placeholder="0" aria-label="0"
+                <input type="number" class="form-control" id = "devotee" name = "devotee" placeholder="0" aria-label="0"
                   aria-describedby="addon-wrapping" />
               </div>
               <br />
@@ -289,7 +289,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form action="/action_page.php">
+            <form action="/murdeshwar/" method = 'post'>
               <label for="Date">Select Date:</label>
               <div id="add_datepicker3" style="display: inline-block;"></div>
               <br />
@@ -310,16 +310,16 @@
               <br />
               <div class="input-group mb-3">
                 <label class="input-group-text" for="inputGroupSelect01">Prices</label>
-                <select class="form-select" id="inputGroupSelect01">
+                <select class="form-select" id="inputGroupSelect01" name = "inputGroupSelect01">
                   <option selected>Choose...</option>
-                  <option value="1">Rs 25</option>
-                  <option value="2">Rs 50</option>
+                  <option value="25">Rs 25</option>
+                  <option value="50">Rs 50</option>
                 </select>
               </div>
               <br />
               <div class="input-group flex-nowrap">
                 <span class="input-group-text" id="addon-wrapping">Number of devotees</span>
-                <input type="INT" class="form-control" placeholder="0" aria-label="0"
+                <input type="number" class="form-control" id="devotee" name = "devotee" placeholder="0" aria-label="0"
                   aria-describedby="addon-wrapping" />
               </div>
               <br />
@@ -362,11 +362,11 @@
   let currentDate = `${ yer }-${ month }-${day}`;
   $(document).ready(function () {
     let elem = document.getElementById("add_datepicker1")
-    elem.innerHTML = `<input class="datepicker" type="date" id="datepicker" name="Date" min="${currentDate}" />`
+    elem.innerHTML = `<input class="datepicker" type="date" id="datepicker1" name="datepicker1" min="${currentDate}" />`
      elem = document.getElementById("add_datepicker2")
-    elem.innerHTML = `<input class="datepicker" type="date" id="datepicker" name="Date" min="${currentDate}" />`
+    elem.innerHTML = `<input class="datepicker" type="date" id="datepicker2" name="datepicker2" min="${currentDate}" />`
      elem = document.getElementById("add_datepicker3")
-    elem.innerHTML = `<input class="datepicker" type="date" id="datepicker" name="Date" min="${currentDate}" />`
+    elem.innerHTML = `<input class="datepicker" type="date" id="datepicker3" name="datepicker3" min="${currentDate}" />`
     console.log(elem)
     // elem.setAttribute("min", "2024-03-10")
   })

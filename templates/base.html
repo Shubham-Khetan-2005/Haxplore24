@@ -57,8 +57,12 @@
         </ul>
         <ul class="navbar-nav mb-2 mb-lg-0 ms-auto me-5">
           <li class="nav-item ">
+            {%if current_user.is_authenticated %}
+            <a type="button" class="btn btn-dark btn-outline-light ms-1 me-1" href="/logout">Logout</a>
+            {%else%}
             <a type="button" class="btn btn-dark btn-outline-light ms-1 me-1" href="/signup">Sign Up</a>
             <a type="button" class="btn btn-dark btn-outline-light ms-1 me-1" href="/login">Login</a>
+               {% endif %}
           </li>
         </ul>
       </div>
@@ -68,16 +72,14 @@
   <!-- Adding flashed messages -->
   {% with message = get_flashed_messages()[-1] %}
   {% if message %}
-  <ul class=flashes>
+  <ul class="flashes" style="padding-left: 0rem;">
     {%if message[0] == "error"%}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       {{message[1]}}
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
-    {%if message[0] == "good"%}
+    {%if message[0] == "success"%}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
       {{message[1]}}
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
