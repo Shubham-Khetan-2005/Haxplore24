@@ -2,4 +2,18 @@
 
 {% block body %}
   <p>Hello world</p>
+    
+
+  {% if current_user.is_authenticated  %}
+    {% if current_user.is_admin %}
+    {% else %}
+    <script>
+      window.location = "/"
+    </script>
+    {% endif %}
+  {% else %}
+    <script>
+      window.location = "/"
+    </script>
+  {% endif %}
 {% endblock %}

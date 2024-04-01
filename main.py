@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect , url_for, session, jsonify , Response , send_file
 from flask_login import LoginManager , login_required , login_user , logout_user  , current_user
 from flask_sqlalchemy import SQLAlchemy
+from flask_qrcode import QRcode
 import login_system as ls
 from ecdsa import SigningKey
 from argon2 import PasswordHasher
@@ -18,6 +19,7 @@ import ecdsa
 ph=PasswordHasher()
 MAX_TRANSACTIONS=1 
 app =Flask(__name__)
+QRcode(app)
 # Binding both the databses to the sqlalchemy uri...
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/haxplore'
@@ -92,13 +94,14 @@ class mandir_3(db.Model):
     slot_booking = db.Column(db.String(), nullable=False)
     no_devotee = db.Column(db.Integer, nullable=False)
 
-mydb={"Ram_Mandir":mandir_1,"Akshardam":mandir_2,"Murdeshwar":mandir_3}
+mydb={"9979887672":mandir_1,"9328524215":mandir_2,"7359029004":mandir_3}
 class MicroBlogModelView(ModelView):
     can_edit=False
     can_delete=False
     create_modal = True
     can_view_details = True
-    column_filters = ['contact']
+    form_columns = ['user_id','no_devotee','ticket_amount','slot_booking']
+    column_filters = ['user_id']
     can_export = True
     def is_accessible(self):
         return current_user.is_authenticated and current_user.is_admin
@@ -106,6 +109,9 @@ class MicroBlogModelView(ModelView):
     def inaccessible_callback(self, name, **kwargs):
         # redirect to login page if user doesn't have access
         return redirect(url_for('login'), next=request.url)
+
+
+admin.add_view(MicroBlogModelView(mydb["9979887672"],db.session,endpoint='tickets'))
 
 
 
@@ -155,7 +161,8 @@ def load_user(details):
     user_contact = details["contact"]
     user_id = details["id"]
     user_name = details["name"]
-    return ls.User(user_contact, user_id, user_name)
+    is_admin = details["admin"]
+    return ls.User(user_contact,  user_name, user_id, is_admin)
 
 
 @app.errorhandler(404) 
@@ -165,8 +172,11 @@ def not_found(e):
 
 @app.route("/", methods = ['GET'])
 def index():
-    # if current_user.is_authenticated:
-    #     print(current_user.is_admin)
+    if current_user.is_authenticated:
+        print("hello")
+        print(current_user.user_name)
+        print(current_user.contact)
+        print(current_user.user_id)
     return render_template("index.html")
 
 @app.route("/login", methods = ['GET', 'POST'])
@@ -200,13 +210,13 @@ def login():
         
         user_contact = user_account.contact
         user_id = user_account.id
-        user_to_log = ls.User(user_contact,user_account.name, user_id)
-        # current_user.user_name="Ram_Mandir"
-        # print(current_user.user_name)
-        # current_user.is_admin=True
+        if(str(user_contact) in list(mydb.keys())):
+            user_to_log = ls.User(user_contact,user_account.name, user_id, True)
+        else:
+            user_to_log = ls.User(user_contact,user_account.name, user_id)
+
         login_user(user_to_log)
-        if(current_user.is_authenticated and current_user.is_admin):
-            admin.add_view(ModelView(mydb[current_user.user_name],db.session,endpoint='tickets'))
+            
         fe.login_success()
         return redirect(url_for("index"))
 
@@ -264,6 +274,10 @@ def signup():
 def logout():
     logout_user()
     return redirect("/")
+@app.route("/online_darshan")
+@login_required
+def online_darshan():
+    return render_template("online_darshan.html")
 
 @app.route("/rammandir/",methods=['POST'])
 @login_required
@@ -286,7 +300,7 @@ def rammandir():
             slot = "Slot 1 (7:00 AM to 11:00 AM)"
         else :
             slot = "Slot 2 (2:00 PM to 7:00 PM)"
-        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "Ram_Mandir"}
+        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "9979887672"}
 
         return redirect("/transaction/")
     
@@ -313,7 +327,7 @@ def akshardham():
         else :
             slot = "Slot 2 (2:30 PM to 6:30 PM)"
 
-        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "Akshardam"}
+        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "9328524215"}
 
         return redirect("/transaction/")
     
@@ -341,7 +355,7 @@ def murdeshwar():
         else :
             slot = "Slot 2 (3:00 PM to 8:00 PM)"
 
-        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "Murdeshwar"}
+        session['ticket'] = {'slot':slot, 'price':price, 'date' : date, 'people':people, 'temple' :  "7359029004"}
 
         return redirect("/transaction/")
 
