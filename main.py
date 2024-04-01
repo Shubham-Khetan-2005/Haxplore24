@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect , url_for, session, jsonify , Response , send_file
+from flask import Flask, render_template, request, redirect , url_for, session, jsonify , Response, send_file, make_response
 from flask_login import LoginManager , login_required , login_user , logout_user  , current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_qrcode import QRcode
 import login_system as ls
+import pdfkit
 from ecdsa import SigningKey
 from argon2 import PasswordHasher
 from Blockchain.blockChain import BlockChain,Block
@@ -10,6 +11,7 @@ from Blockchain.transaction import Transaction
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 import pymysql
+from io import BytesIO
 pymysql.install_as_MySQLdb()
 import signup as si
 import re
@@ -113,7 +115,7 @@ class MicroBlogModelView(ModelView):
 
 admin.add_view(MicroBlogModelView(mydb["9979887672"],db.session,endpoint='tickets'))
 
-
+config = pdfkit.configuration(wkhtmltopdf = r"C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")  
 
 def to_string(key,isPublic):
     if isPublic:
@@ -367,6 +369,9 @@ def transaction():
         fe.dnt_ac()
         redirect("/")
 
+    if 'to_redirect'  in session:
+        return redirect('/')
+
     if request.method=="POST":
         if 'ticket' not in session:
             fe.some_went_wrong()
@@ -398,5 +403,24 @@ def transaction():
         return redirect('/')
     return render_template("transaction.html")
                     
+@login_required
+@app.route("/download/",methods=['GET','POST'])
+def download():
+    if(current_user.is_admin):
+        fe.dnt_ac()
+        redirect("/")
+
+    if 'dwn_inf' not in session:
+        fe.some_went_wrong()
+        return redirect('/')
+    values = session['dwn_inf']
+    session.pop('dwn_inf')
+    html = render_template("download.html", value = values)
+    pdf = pdfkit.from_string(html, False,  configuration = config)
+    session["to_redirect"] = True
+    response = send_file(BytesIO(pdf), download_name="Ticket.pdf" , as_attachment=True)
+    return response
+                    
+
 if __name__ == "__main__":
     app.run(debug=True)
