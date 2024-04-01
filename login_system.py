@@ -19,7 +19,7 @@ class User():
         return True
 
     def get_id(self):
-        return {"id":self.user_id , "contact":self.contact, "name":self.user_name}
+        return {"id":self.user_id , "contact":self.contact, "name":self.user_name, "admin":self.is_admin}
 
     def is_authenticated(self):
         return True
@@ -89,14 +89,9 @@ def add_transaction(db, dbase , values, id,currentHash, previousHash, session):
         db.session.add(enter_values)
         db.session.commit() 
         fe.trans_suc()  
-        print("try se")         
-        
-        return redirect("/")
 
     except Exception:
-        print("error")
         fe.server_contact_error()
-        return redirect("/")
 
 
 def get_key_pair(dbase, user_id):
